@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI - Адаптивное обучение</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background-color: #121212; }
+        .hero-bg { background: linear-gradient(135deg, #121212 0%, #1a1a2e 100%); }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 5px #BB86FC; }
+            50% { box-shadow: 0 0 25px #BB86FC; }
+        }
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes slide-in-left {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slide-in-right {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        .animate-spin-slow { animation: spin-slow 20s linear infinite; }
+        .animate-bounce { animation: bounce 1s ease-in-out infinite; }
+        .slide-left { animation: slide-in-left 0.6s ease-out; }
+        .slide-right { animation: slide-in-right 0.6s ease-out; }
+        
+        .stat-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #03DAC6;
+        }
+        
+        .daily-challenge {
+            background: linear-gradient(135deg, rgba(187, 134, 252, 0.15), rgba(3, 218, 198, 0.1));
+            border: 1px solid rgba(187, 134, 252, 0.3);
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #BB86FC;
+            background-color: rgba(187, 134, 252, 0.05);
+        }
+        
+        .level-progress {
+            background: linear-gradient(90deg, #BB86FC, #03DAC6);
+        }
+        
+        .shimmer-text {
+            background: linear-gradient(90deg, #BB86FC, #03DAC6, #BB86FC);
+            background-size: 200% auto;
+            animation: shimmer 2s linear infinite;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .achievement-icon {
+            transition: all 0.3s ease;
+        }
+        .achievement-icon.unlocked {
+            filter: drop-shadow(0 0 5px #BB86FC);
+        }
+        .achievement-icon.locked {
+            filter: grayscale(0.7);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="bg-dark">
+    <nav class="fixed top-0 w-full bg-card border-b border-default z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition">
+                    <div class="w-10 h-10 bg-elevated rounded-lg flex items-center justify-center border border-accent-primary">
+                        <i class="fas fa-book-open text-accent-primary text-lg"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-white">EduAI</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-accent-primary font-medium">Главная</a>
+                    <a href="courses.html" class="text-gray-300 hover:text-accent-primary transition">Курсы</a>
+                    <a href="features.html" class="text-gray-300 hover:text-accent-primary transition">Возможности</a>
+                    <a href="about.html" class="text-gray-300 hover:text-accent-primary transition">О нас</a>
+                </div>
+                <div class="flex items-center space-x-4" id="authButtons"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-16">
+        <section class="min-h-screen hero-bg relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute top-10 left-10 w-64 h-64 border border-accent-primary rounded-full animate-spin-slow"></div>
+                <div class="absolute bottom-20 right-20 w-96 h-96 border border-accent-secondary rounded-full animate-spin-slow" style="animation-direction: reverse;"></div>
+            </div>
+            
+            <div class="absolute top-20 right-10 animate-float opacity-30">
+                <i class="fas fa-star text-accent-primary text-4xl"></i>
+            </div>
+            <div class="absolute bottom-32 left-10 animate-float opacity-30" style="animation-delay: 1s;">
+                <i class="fas fa-trophy text-accent-secondary text-4xl"></i>
+            </div>
+
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="grid md:grid-cols-2 gap-12 items-center min-h-[80vh]">
+                    <div class="space-y-6 fade-in slide-left">
+                        <div id="userLevelBadge" class="inline-flex items-center gap-2 px-3 py-1 bg-elevated rounded-full border border-accent-primary/50 hidden">
+                            <i class="fas fa-crown text-accent-primary text-sm"></i>
+                            <span class="text-xs text-gray-300">Уровень <span id="userLevel">1</span></span>
+                            <div class="w-16 h-1 bg-gray-700 rounded-full overflow-hidden">
+                                <div id="levelProgress" class="h-full level-progress rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <h1 class="text-5xl md:text-6xl font-bold leading-tight text-white">
+    Обучение с <span class="text-accent-primary">адаптивной системой</span>
+</h1>
+                        <p class="text-xl text-gray-300">
+                            Персонализированная платформа, которая подстраивается под ваш уровень знаний и помогает достигать целей
+                        </p>
+                        
+                        <div id="dailyChallenge" class="daily-challenge rounded-xl p-4 hidden">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-accent-primary/20 rounded-full flex items-center justify-center animate-pulse-slow">
+                                        <i class="fas fa-calendar-day text-accent-primary"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-accent-primary">Ежедневный вызов</p>
+                                        <p class="text-sm text-white font-medium" id="challengeText">Пройдите 1 урок сегодня</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-gray-400">Награда</p>
+                                    <p class="text-sm text-accent-secondary">+50 XP</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 w-full bg-gray-700 rounded-full h-1.5">
+                                <div id="challengeProgress" class="bg-accent-secondary h-1.5 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="window.location.href='courses.html'" class="px-8 py-4 btn-primary rounded-lg font-semibold transition transform hover:scale-105">
+                                Начать обучение <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                            <button onclick="window.location.href='features.html'" class="px-8 py-4 btn-dark rounded-lg font-semibold transition hover:border-accent-primary">
+                                Узнать больше
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center space-x-8 pt-8">
+                            <div class="stat-card bg-card p-4 rounded-xl border border-default text-center min-w-[100px] transition" onclick="window.location.href='dashboard.html'">
+                                <div class="text-3xl font-bold text-white" id="statsStudents">0</div>
+                                <div class="text-gray-400 text-sm">Студентов</div>
+                            </div>
+                            <div class="stat-card bg-card p-4 rounded-xl border border-default text-center min-w-[100px] transition" onclick="window.location.href='courses.html'">
+                                <div class="text-3xl font-bold text-white" id="statsCourses">11</div>
+                                <div class="text-gray-400 text-sm">Курсов</div>
+                            </div>
+                            <div class="stat-card bg-card p-4 rounded-xl border border-default text-center min-w-[100px] transition" onclick="window.location.href='dashboard.html'">
+                                <div class="text-3xl font-bold text-white" id="statsTests">0</div>
+                                <div class="text-gray-400 text-sm">Курсов пройдено</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative animate-float slide-right">
+                        <div class="bg-card border border-default rounded-2xl p-8 shadow-2xl">
+                            <!-- XP бар -->
+                            <div class="mb-6">
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-gray-400">Опыт сегодня</span>
+                                    <span id="xpToday" class="text-accent-primary">0 / 100 XP</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div id="xpBar" class="bg-gradient-to-r from-accent-primary to-accent-secondary h-2 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Достижения пользователя -->
+                            <div class="mb-6">
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="text-xs text-gray-400">Ваши достижения</span>
+                                    <span class="text-xs text-accent-primary" id="achievementsCount">0/15</span>
+                                </div>
+                                <div id="achievementsGrid" class="grid grid-cols-4 gap-2">
+                                    <!-- Заполняется динамически -->
+                                </div>
+                            </div>
+                            
+                            <!-- Текущие курсы -->
+                            <div class="space-y-3">
+                                <div class="text-xs text-gray-400 mb-2">Продолжить обучение</div>
+                                <div id="continueLearning" class="space-y-2">
+                                    <!-- Заполняется динамически -->
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 pt-4 border-t border-default">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-gray-400">До следующего уровня:</span>
+                                    <span id="nextLevelXP" class="text-xs text-accent-primary">0 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="py-16 bg-card">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-white">Почему <span class="text-accent-primary">EduAI</span>?</h2>
+                    <p class="text-gray-400 mt-2">Учитесь эффективнее с нашими преимуществами</p>
+                </div>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="feature-card bg-card p-5 rounded-xl border border-default text-center">
+                        <div class="w-14 h-14 bg-elevated rounded-xl flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-chart-line text-accent-primary text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-white">Адаптивное обучение</h3>
+                        <p class="text-xs text-gray-400 mt-1">Подстраивается под вас</p>
+                    </div>
+                    <div class="feature-card bg-card p-5 rounded-xl border border-default text-center">
+                        <div class="w-14 h-14 bg-elevated rounded-xl flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-chart-simple text-accent-secondary text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-white">Аналитика прогресса</h3>
+                        <p class="text-xs text-gray-400 mt-1">Отслеживайте успехи</p>
+                    </div>
+                    <div class="feature-card bg-card p-5 rounded-xl border border-default text-center">
+                        <div class="w-14 h-14 bg-elevated rounded-xl flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-award text-accent-primary text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-white">Геймификация</h3>
+                        <p class="text-xs text-gray-400 mt-1">Достижения и награды</p>
+                    </div>
+                    <div class="feature-card bg-card p-5 rounded-xl border border-default text-center">
+                        <div class="w-14 h-14 bg-elevated rounded-xl flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-certificate text-accent-secondary text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-white">Сертификаты</h3>
+                        <p class="text-xs text-gray-400 mt-1">Подтвердите знания</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="py-16">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="bg-gradient-to-r from-accent-primary/20 to-accent-secondary/20 rounded-2xl p-8 border border-accent-primary/30">
+                    <h2 class="text-2xl font-bold text-white mb-3">Готовы начать обучение?</h2>
+                    <p class="text-gray-400 mb-6">Присоединяйтесь к тысячам студентов, которые уже учатся с EduAI</p>
+                    <button onclick="window.location.href='courses.html'" class="px-8 py-3 btn-primary rounded-lg font-semibold transition inline-flex items-center gap-2">
+                        Начать сейчас <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Auth Modals -->
+    <div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card rounded-2xl max-w-md w-full p-8 fade-in border border-default">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Вход в систему</h2>
+                <button onclick="closeModal('loginModal')" class="text-gray-400 hover:text-gray-300"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                    <input type="email" id="loginEmail" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Пароль</label>
+                    <input type="password" id="loginPassword" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <button type="submit" class="w-full py-3 btn-primary rounded-lg font-medium transition">Войти</button>
+            </form>
+            <p class="text-center mt-4 text-sm text-gray-400">Нет аккаунта? <a href="#" onclick="switchToRegister()" class="text-accent-primary font-medium">Зарегистрироваться</a></p>
+        </div>
+    </div>
+
+    <div id="registerModal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card rounded-2xl max-w-md w-full p-8 fade-in border border-default">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Регистрация</h2>
+                <button onclick="closeModal('registerModal')" class="text-gray-400 hover:text-gray-300"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form onsubmit="handleRegister(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Имя</label>
+                    <input type="text" id="registerName" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                    <input type="email" id="registerEmail" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Пароль</label>
+                    <input type="password" id="registerPassword" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <button type="submit" class="w-full py-3 btn-primary rounded-lg font-medium transition">Зарегистрироваться</button>
+            </form>
+            <p class="text-center mt-4 text-sm text-gray-400">Уже есть аккаунт? <a href="#" onclick="switchToLogin()" class="text-accent-primary font-medium">Войти</a></p>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Достижения для отображения
+        const displayAchievements = [
+            { id: 'first_course', name: 'Первые шаги', icon: 'fa-seedling', unlocked: false },
+            { id: 'beginner', name: 'Ученик', icon: 'fa-graduation-cap', unlocked: false },
+            { id: 'enthusiast', name: 'Энтузиаст', icon: 'fa-fire', unlocked: false },
+            { id: 'expert', name: 'Эксперт', icon: 'fa-trophy', unlocked: false }
+        ];
+        
+        function updateGamificationUI() {
+            if (!currentUser) return;
+            
+            let totalCompleted = 0;
+            let totalScore = 0;
+            let inProgressCourses = [];
+            
+            for (const course of coursesData) {
+                const progress = getCourseProgress(currentUser.uid, course.id);
+                if (progress.completed) {
+                    totalCompleted++;
+                    totalScore += progress.quizScore;
+                } else if (progress.completedLessons && progress.completedLessons.length > 0) {
+                    inProgressCourses.push({ course, progress });
+                }
+            }
+            
+            // XP (10 XP за каждый пройденный курс, максимум 100 в день)
+            let xpToday = parseInt(localStorage.getItem(`xp_today_${currentUser.uid}`) || '0');
+            const lastXPDate = localStorage.getItem(`xp_date_${currentUser.uid}`);
+            const today = new Date().toDateString();
+            
+            if (lastXPDate !== today) {
+                xpToday = 0;
+                localStorage.setItem(`xp_date_${currentUser.uid}`, today);
+            }
+            
+            document.getElementById('xpToday').textContent = `${Math.min(xpToday, 100)} / 100 XP`;
+            document.getElementById('xpBar').style.width = `${Math.min(xpToday, 100)}%`;
+            
+            // Уровень (каждые 3 курса = новый уровень)
+            const level = Math.floor(totalCompleted / 3) + 1;
+            const levelProgressPercent = ((totalCompleted % 3) / 3) * 100;
+            const nextLevelXP = (3 - (totalCompleted % 3)) * 10;
+            
+            document.getElementById('userLevel').textContent = level;
+            document.getElementById('levelProgress').style.width = `${levelProgressPercent}%`;
+            document.getElementById('nextLevelXP').textContent = `${nextLevelXP} XP`;
+            
+            // Ежедневный челлендж
+            const lastChallengeDate = localStorage.getItem(`challenge_${currentUser.uid}_date`);
+            let challengeCompleted = localStorage.getItem(`challenge_${currentUser.uid}_completed`) === 'true';
+            let challengeProgress = parseInt(localStorage.getItem(`challenge_${currentUser.uid}_progress`) || '0');
+            
+            if (lastChallengeDate !== today) {
+                challengeCompleted = false;
+                challengeProgress = 0;
+                localStorage.setItem(`challenge_${currentUser.uid}_date`, today);
+                localStorage.setItem(`challenge_${currentUser.uid}_completed`, 'false');
+                localStorage.setItem(`challenge_${currentUser.uid}_progress`, '0');
+            }
+            
+            const dailyChallengeDiv = document.getElementById('dailyChallenge');
+            if (dailyChallengeDiv) {
+                dailyChallengeDiv.classList.remove('hidden');
+                if (challengeCompleted) {
+                    document.getElementById('challengeText').textContent = '✅ Выполнено! Завтра новый вызов';
+                    document.getElementById('challengeProgress').style.width = '100%';
+                } else {
+                    document.getElementById('challengeText').textContent = 'Пройдите 1 урок сегодня';
+                    document.getElementById('challengeProgress').style.width = `${challengeProgress}%`;
+                }
+            }
+            
+            // Обновляем достижения
+            const userAchievements = getUserAchievements(currentUser.uid);
+            const achievementsContainer = document.getElementById('achievementsGrid');
+            if (achievementsContainer) {
+                const achievementsToShow = [
+                    { id: 'first_course', name: 'Первые шаги', icon: 'fa-seedling', check: () => totalCompleted >= 1 },
+                    { id: 'beginner', name: 'Ученик', icon: 'fa-graduation-cap', check: () => totalCompleted >= 3 },
+                    { id: 'enthusiast', name: 'Энтузиаст', icon: 'fa-fire', check: () => totalCompleted >= 5 },
+                    { id: 'expert', name: 'Эксперт', icon: 'fa-trophy', check: () => totalCompleted >= 10 }
+                ];
+                
+                achievementsContainer.innerHTML = achievementsToShow.map(ach => {
+                    const unlocked = ach.check();
+                    return `
+                        <div class="text-center group cursor-pointer" title="${ach.name}">
+                            <div class="w-10 h-10 bg-elevated rounded-full flex items-center justify-center mx-auto mb-1 transition ${unlocked ? 'border border-accent-primary shadow-glow' : 'opacity-50'}">
+                                <i class="fas ${ach.icon} ${unlocked ? 'text-accent-primary' : 'text-gray-500'} text-sm"></i>
+                            </div>
+                            <p class="text-[10px] ${unlocked ? 'text-accent-primary' : 'text-gray-500'}">${ach.name}</p>
+                        </div>
+                    `;
+                }).join('');
+            }
+            document.getElementById('achievementsCount').textContent = `${userAchievements.length}/${achievementsList.length}`;
+            
+            // Продолжить обучение
+            const continueContainer = document.getElementById('continueLearning');
+            if (continueContainer) {
+                if (inProgressCourses.length === 0 && totalCompleted === 0) {
+                    continueContainer.innerHTML = '<div class="text-center text-gray-500 text-sm py-4">Начните первый курс!</div>';
+                } else if (inProgressCourses.length === 0 && totalCompleted > 0) {
+                    continueContainer.innerHTML = '<div class="text-center text-gray-500 text-sm py-4">Все курсы пройдены! 🎉</div>';
+                } else {
+                    continueContainer.innerHTML = inProgressCourses.slice(0, 2).map(({ course, progress }) => {
+                        const percent = Math.round((progress.completedLessons.length / course.lessons.length) * 100);
+                        return `
+                            <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-elevated transition cursor-pointer" onclick="openCourse(${course.id})">
+                                <div class="w-8 h-8 bg-accent-primary/20 rounded-lg flex items-center justify-center">
+                                    <i class="fab ${course.icon} text-accent-primary text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between">
+                                        <span class="text-xs text-white">${course.title.substring(0, 20)}</span>
+                                        <span class="text-xs text-gray-500">${percent}%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-1 mt-1">
+                                        <div class="bg-accent-secondary h-1 rounded-full" style="width: ${percent}%"></div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right text-gray-600 text-xs"></i>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+            
+            if (totalCompleted > 0) {
+                document.getElementById('userLevelBadge').classList.remove('hidden');
+            }
+        }
+        
+        // Функция для добавления опыта (вызывается при прохождении урока)
+        window.addXP = function(amount) {
+            if (!currentUser) return;
+            const today = new Date().toDateString();
+            let xpToday = parseInt(localStorage.getItem(`xp_today_${currentUser.uid}`) || '0');
+            const lastXPDate = localStorage.getItem(`xp_date_${currentUser.uid}`);
+            
+            if (lastXPDate !== today) {
+                xpToday = 0;
+                localStorage.setItem(`xp_date_${currentUser.uid}`, today);
+            }
+            
+            xpToday += amount;
+            localStorage.setItem(`xp_today_${currentUser.uid}`, xpToday);
+            
+            // Обновляем челлендж
+            let challengeProgress = parseInt(localStorage.getItem(`challenge_${currentUser.uid}_progress`) || '0');
+            let challengeCompleted = localStorage.getItem(`challenge_${currentUser.uid}_completed`) === 'true';
+            
+            if (!challengeCompleted && challengeProgress < 100) {
+                challengeProgress = Math.min(challengeProgress + 50, 100);
+                localStorage.setItem(`challenge_${currentUser.uid}_progress`, challengeProgress);
+                
+                if (challengeProgress >= 100) {
+                    localStorage.setItem(`challenge_${currentUser.uid}_completed`, 'true');
+                    // Добавляем бонусные XP за выполнение челленджа
+                    xpToday = Math.min(xpToday + 50, 100);
+                    localStorage.setItem(`xp_today_${currentUser.uid}`, xpToday);
+                    alert('🎉 Поздравляем! Вы выполнили ежедневный вызов и получили +50 XP!');
+                }
+            }
+            
+            updateGamificationUI();
+        };
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (currentUser) {
+                    updateGamificationUI();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

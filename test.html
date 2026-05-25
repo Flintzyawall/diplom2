@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI - Тестирование</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50">
+    <nav class="fixed top-0 w-full bg-white shadow-md z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition">
+    <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+        <i class="fas fa-brain text-white text-xl"></i>
+    </div>
+    <span class="text-2xl font-bold gradient-text">EduAI</span>
+</a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-purple-600 transition">Главная</a>
+                    <a href="courses.html" class="text-gray-700 hover:text-purple-600 transition">Курсы</a>
+                    <a href="features.html" class="text-gray-700 hover:text-purple-600 transition">Возможности</a>
+                    <a href="about.html" class="text-gray-700 hover:text-purple-600 transition">О нас</a>
+                </div>
+                <div class="flex items-center space-x-4" id="authButtons"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-16 min-h-screen">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="gradient-bg p-6 text-white">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 id="testTitle" class="text-2xl font-bold"></h2>
+                        <button onclick="exitTest()" class="px-4 py-2 bg-white bg-opacity-20 rounded-lg hover:bg-opacity-30 transition">
+                            <i class="fas fa-times"></i> Выйти
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-sm">Вопрос <span id="currentQuestion">1</span> из <span id="totalQuestions">10</span></div>
+                            <div class="text-sm">Сложность: <span id="currentDifficulty" class="font-bold">Средняя</span></div>
+                        </div>
+                        <div class="flex items-center space-x-2"><i class="fas fa-clock"></i><span id="testTimer">00:00</span></div>
+                    </div>
+                    <div class="mt-4 bg-white bg-opacity-20 rounded-full h-2">
+                        <div id="progressBar" class="bg-white h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div id="aiThinking" class="hidden p-4 bg-purple-50 border-b border-purple-100">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 gradient-bg rounded-full flex items-center justify-center ai-thinking">
+                            <i class="fas fa-brain text-white text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-purple-900">ИИ анализирует ваш ответ...</p>
+                            <p class="text-xs text-purple-600">Подбираю следующий вопрос оптимальной сложности</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8">
+                    <div id="questionContainer" class="question-transition">
+                        <h3 id="questionText" class="text-xl font-semibold mb-6"></h3>
+                        <div id="answersContainer" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-gray-50 border-t flex justify-between items-center">
+                    <div class="flex items-center space-x-4">
+                        <div class="text-sm text-gray-600">Правильных: <span id="correctCount" class="font-bold text-green-600">0</span></div>
+                        <div class="text-sm text-gray-600">Неправильных: <span id="wrongCount" class="font-bold text-red-600">0</span></div>
+                    </div>
+                    <button id="nextQuestionBtn" onclick="submitAnswer()" disabled class="px-6 py-3 gradient-bg text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transition">
+                        Ответить <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div id="resultsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-8 fade-in">
+            <div class="text-center mb-6">
+                <div id="resultIcon" class="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center bg-yellow-100">
+                    <i class="fas fa-trophy text-4xl text-yellow-600"></i>
+                </div>
+                <h2 class="text-3xl font-bold mb-2">Тест завершен!</h2>
+                <p class="text-gray-600">Вот ваши результаты</p>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="text-center p-4 bg-purple-50 rounded-lg"><div class="text-3xl font-bold text-purple-600" id="resultScore">0%</div><div class="text-sm text-gray-600">Результат</div></div>
+                <div class="text-center p-4 bg-green-50 rounded-lg"><div class="text-3xl font-bold text-green-600" id="resultCorrect">0</div><div class="text-sm text-gray-600">Правильно</div></div>
+                <div class="text-center p-4 bg-blue-50 rounded-lg"><div class="text-3xl font-bold text-blue-600" id="resultTime">0:00</div><div class="text-sm text-gray-600">Время</div></div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-bold mb-3">Анализ ИИ:</h3>
+                <div id="aiAnalysis" class="p-4 bg-gray-50 rounded-lg text-sm text-gray-700"></div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-bold mb-3">Рекомендации:</h3>
+                <div id="aiRecommendations" class="space-y-2"></div>
+            </div>
+
+            <div class="flex space-x-4">
+                <button onclick="window.location.href='dashboard.html'" class="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition">
+                    В панель управления
+                </button>
+                <button onclick="retryTest()" class="flex-1 px-6 py-3 gradient-bg text-white rounded-lg font-medium hover:shadow-lg transition">
+                    Пройти еще раз
+                </button>
+            </div>
+        </div>
+    </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

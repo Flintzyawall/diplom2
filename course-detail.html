@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowlly - Детали курса</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background-color: #121212; }
+        .lesson-card { transition: all 0.2s ease; }
+        .lesson-card.completed { border-color: #03DAC6; background-color: rgba(3, 218, 198, 0.05); }
+        .quiz-option {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .quiz-option:hover {
+            border-color: #BB86FC;
+            background-color: rgba(187, 134, 252, 0.05);
+        }
+        .quiz-option.selected {
+            border-color: #BB86FC;
+            background-color: rgba(187, 134, 252, 0.15);
+        }
+        .quiz-option.correct {
+            border-color: #03DAC6;
+            background-color: rgba(3, 218, 198, 0.15);
+        }
+        .quiz-option.wrong {
+            border-color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.15);
+        }
+        .quiz-option.disabled {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        @keyframes bounce-in {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-bounce-in {
+            animation: bounce-in 0.5s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-dark">
+    <nav class="fixed top-0 w-full bg-card border-b border-default z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition">
+                    <div class="w-10 h-10 bg-elevated rounded-lg flex items-center justify-center border border-accent-primary">
+                        <span class="text-accent-primary font-bold text-xl">K</span>
+                    </div>
+                    <span class="text-2xl font-bold text-white">Knowlly</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-300 hover:text-accent-primary transition">Главная</a>
+                    <a href="courses.html" class="text-accent-primary font-medium">Курсы</a>
+                    <a href="features.html" class="text-gray-300 hover:text-accent-primary transition">Возможности</a>
+                    <a href="about.html" class="text-gray-300 hover:text-accent-primary transition">О нас</a>
+                </div>
+                <div class="flex items-center space-x-4" id="authButtons"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-16 min-h-screen">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8" id="courseHeader"></div>
+
+            <div class="bg-card rounded-xl p-4 mb-8 border border-default">
+                <div class="flex justify-between text-sm mb-2">
+                    <span class="text-gray-400">Прогресс курса</span>
+                    <span id="progressPercent" class="text-accent-primary">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="courseProgressFill" class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div id="lessonsContainer" class="space-y-4 mb-12"></div>
+
+            <!-- Блок достижений -->
+            <div id="achievementsSection" class="bg-card rounded-xl border border-default p-6 mb-8 hidden">
+                <h3 class="text-lg font-bold text-white mb-3"><i class="fas fa-trophy text-accent-primary mr-2"></i>Полученные достижения</h3>
+                <div id="achievementsList" class="flex flex-wrap gap-3"></div>
+            </div>
+
+            <div id="quizSection" class="bg-card rounded-xl border border-default overflow-hidden hidden">
+                <div class="p-6 border-b border-default">
+                    <h3 class="text-xl font-bold text-white"><i class="fas fa-tasks text-accent-secondary mr-2"></i>Практическое задание</h3>
+                    <p class="text-gray-400 text-sm mt-1">Проверьте свои знания по курсу</p>
+                </div>
+                <div id="quizContainer" class="p-6 space-y-6"></div>
+                <div class="p-6 border-t border-default">
+                    <button id="submitQuizBtn" onclick="submitQuiz()" class="px-6 py-3 btn-primary rounded-lg font-medium transition">Проверить ответы</button>
+                </div>
+            </div>
+
+            <div id="resultsSection" class="bg-card rounded-xl border border-default p-6 hidden mt-8">
+                <div class="text-center">
+                    <i class="fas fa-check-circle text-accent-secondary text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-bold text-white mb-2">Курс завершён!</h3>
+                    <p class="text-gray-400 mb-4">Ваш результат: <span id="quizScore" class="text-accent-primary font-bold text-xl">0</span>%</p>
+                    <p class="text-gray-400 mb-4">Правильных ответов: <span id="correctAnswersCount" class="text-accent-secondary font-bold">0</span> из <span id="totalQuestionsCount">0</span></p>
+                    <button onclick="window.location.href='courses.html'" class="px-6 py-2 btn-dark rounded-lg">Вернуться к курсам</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let currentCourse = null;
+        let completedLessons = [];
+        let quizAnswers = [];
+        let quizSubmitted = false;
+        let userAchievements = [];
+
+        function loadCourseDetail() {
+            const courseId = parseInt(sessionStorage.getItem('currentCourseId'));
+            if (!courseId || !currentUser) {
+                window.location.href = 'courses.html';
+                return;
+            }
+
+            currentCourse = getCourseById(courseId);
+            if (!currentCourse) {
+                window.location.href = 'courses.html';
+                return;
+            }
+
+            const progress = getCourseProgress(currentUser.uid, courseId);
+            completedLessons = progress.completedLessons || [];
+            quizSubmitted = progress.completed;
+
+            userAchievements = getUserAchievements(currentUser.uid);
+            if (userAchievements.length > 0) {
+                document.getElementById('achievementsSection').classList.remove('hidden');
+                const earnedAchs = achievementsList.filter(a => userAchievements.includes(a.id));
+                document.getElementById('achievementsList').innerHTML = earnedAchs.map(ach => `
+                    <div class="flex items-center gap-2 px-3 py-2 bg-elevated rounded-lg border border-accent-primary/30">
+                        <i class="fas ${ach.icon} text-accent-primary"></i>
+                        <span class="text-sm text-white">${ach.name}</span>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('courseHeader').innerHTML = `
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold text-white mb-2">${currentCourse.title}</h1>
+                        <p class="text-gray-400">${currentCourse.description}</p>
+                        <div class="flex items-center gap-4 mt-4 text-sm text-gray-500">
+                            <span><i class="far fa-clock mr-1"></i>${currentCourse.duration || '4 часа'}</span>
+                            <span><i class="fas fa-book-open mr-1"></i>${currentCourse.lessons.length} уроков</span>
+                        </div>
+                    </div>
+                    <button onclick="window.location.href='courses.html'" class="px-4 py-2 btn-dark rounded-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>Назад
+                    </button>
+                </div>
+            `;
+
+            const lessonsHtml = currentCourse.lessons.map((lesson, idx) => `
+                <div class="lesson-card bg-card rounded-xl border border-default p-5 ${completedLessons.includes(idx) ? 'completed' : ''}" data-lesson="${idx}">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-8 h-8 rounded-full ${completedLessons.includes(idx) ? 'bg-accent-secondary/20 text-accent-secondary' : 'bg-elevated text-gray-400'} flex items-center justify-center">
+                                    ${completedLessons.includes(idx) ? '<i class="fas fa-check"></i>' : (idx + 1)}
+                                </div>
+                                <h3 class="text-lg font-semibold text-white">${lesson.title}</h3>
+                            </div>
+                            <div class="lesson-content prose prose-invert max-w-none text-gray-300 text-sm" style="${completedLessons.includes(idx) ? '' : 'display: none;'}">
+                                ${lesson.content}
+                            </div>
+                        </div>
+                        <button onclick="toggleLesson(${idx})" class="px-4 py-2 text-sm rounded-lg transition ${completedLessons.includes(idx) ? 'btn-secondary' : 'btn-primary'}">
+                            ${completedLessons.includes(idx) ? 'Просмотр' : 'Начать урок'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('lessonsContainer').innerHTML = lessonsHtml;
+
+            updateProgress();
+
+            if (currentCourse.quiz) {
+                document.getElementById('quizSection').classList.remove('hidden');
+                document.getElementById('totalQuestionsCount').textContent = currentCourse.quiz.length;
+                if (!quizSubmitted) {
+                    loadQuiz();
+                } else {
+                    document.getElementById('quizContainer').innerHTML = '<p class="text-center text-gray-500 py-8">Курс успешно завершён!</p>';
+                    document.getElementById('submitQuizBtn').style.display = 'none';
+                    document.getElementById('resultsSection').classList.remove('hidden');
+                    document.getElementById('quizScore').textContent = progress.quizScore;
+                    document.getElementById('correctAnswersCount').textContent = Math.round((progress.quizScore / 100) * currentCourse.quiz.length);
+                }
+            }
+        }
+
+        function toggleLesson(idx) {
+            const lessonCard = document.querySelector(`.lesson-card[data-lesson="${idx}"]`);
+            const content = lessonCard.querySelector('.lesson-content');
+            const button = lessonCard.querySelector('button');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                if (!completedLessons.includes(idx)) {
+                    button.textContent = 'Отметить пройденным';
+                    button.classList.remove('btn-primary');
+                    button.classList.add('btn-secondary');
+                } else {
+                    button.textContent = 'Просмотрено';
+                }
+            } else {
+                if (!completedLessons.includes(idx)) {
+                    completedLessons.push(idx);
+                    saveProgress();
+                    lessonCard.classList.add('completed');
+                    button.classList.remove('btn-secondary');
+                    button.classList.add('btn-primary');
+                    button.textContent = 'Просмотрено';
+                    updateProgress();
+                }
+                content.style.display = 'none';
+                button.textContent = 'Просмотреть урок';
+                button.classList.remove('btn-primary', 'btn-secondary');
+                button.classList.add('btn-primary');
+            }
+        }
+
+        function updateProgress() {
+            const total = currentCourse.lessons.length;
+            const percent = Math.round((completedLessons.length / total) * 100);
+            document.getElementById('progressPercent').textContent = `${percent}%`;
+            document.getElementById('courseProgressFill').style.width = `${percent}%`;
+        }
+
+        function saveProgress() {
+            saveCourseProgress(currentUser.uid, currentCourse.id, completedLessons, 0, false);
+        }
+
+        function loadQuiz() {
+            const quizHtml = currentCourse.quiz.map((q, qIdx) => `
+                <div class="quiz-question border-b border-default pb-6 last:border-0" data-question="${qIdx}">
+                    <p class="font-medium text-white mb-3">${qIdx + 1}. ${q.question}</p>
+                    <div class="space-y-2">
+                        ${q.options.map((opt, optIdx) => `
+                            <div class="quiz-option p-3 border border-default rounded-lg flex items-center gap-3" data-opt="${optIdx}" onclick="selectQuizAnswer(${qIdx}, ${optIdx})">
+                                <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center radio-circle">
+                                    <div class="radio-dot w-2 h-2 rounded-full hidden"></div>
+                                </div>
+                                <span class="text-gray-300">${opt}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('quizContainer').innerHTML = quizHtml;
+            quizAnswers = new Array(currentCourse.quiz.length).fill(null);
+        }
+
+        function selectQuizAnswer(qIdx, optIdx) {
+            if (quizSubmitted) return;
+            
+            quizAnswers[qIdx] = optIdx;
+            const container = document.querySelector(`.quiz-question[data-question="${qIdx}"]`);
+            
+            // Убираем выделение со всех опций в этом вопросе
+            container.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected');
+                const radioCircle = opt.querySelector('.radio-circle');
+                const radioDot = opt.querySelector('.radio-dot');
+                if (radioCircle) {
+                    radioCircle.classList.remove('border-accent-primary', 'bg-accent-primary/20');
+                    radioCircle.classList.add('border-gray-600');
+                }
+                if (radioDot) radioDot.classList.add('hidden');
+            });
+            
+            // Выделяем выбранную опцию
+            const selectedOpt = container.querySelector(`.quiz-option[data-opt="${optIdx}"]`);
+            selectedOpt.classList.add('selected');
+            const selectedRadioCircle = selectedOpt.querySelector('.radio-circle');
+            const selectedRadioDot = selectedOpt.querySelector('.radio-dot');
+            if (selectedRadioCircle) {
+                selectedRadioCircle.classList.remove('border-gray-600');
+                selectedRadioCircle.classList.add('border-accent-primary', 'bg-accent-primary/20');
+            }
+            if (selectedRadioDot) selectedRadioDot.classList.remove('hidden');
+        }
+
+        function submitQuiz() {
+            if (quizSubmitted) return;
+            
+            let correctCount = 0;
+            currentCourse.quiz.forEach((q, idx) => {
+                if (quizAnswers[idx] === q.correct) correctCount++;
+            });
+            
+            const score = Math.round((correctCount / currentCourse.quiz.length) * 100);
+            
+            // Показываем правильные/неправильные ответы с визуальными эффектами
+            document.querySelectorAll('.quiz-question').forEach((qDiv, idx) => {
+                const correctOpt = currentCourse.quiz[idx].correct;
+                qDiv.querySelectorAll('.quiz-option').forEach((opt, optIdx) => {
+                    opt.classList.add('disabled');
+                    if (optIdx === correctOpt) {
+                        opt.classList.add('correct');
+                    }
+                    if (quizAnswers[idx] === optIdx && quizAnswers[idx] !== correctOpt) {
+                        opt.classList.add('wrong');
+                    }
+                });
+            });
+            
+            document.getElementById('submitQuizBtn').disabled = true;
+            document.getElementById('submitQuizBtn').textContent = 'Результат сохранён';
+            
+            // Сохраняем прогресс
+            saveCourseProgress(currentUser.uid, currentCourse.id, completedLessons, score, true);
+            
+            // Обновляем достижения
+            const allProgress = [];
+            for (const course of coursesData) {
+                const prog = getCourseProgress(currentUser.uid, course.id);
+                if (prog.completed) allProgress.push(prog);
+            }
+            allProgress.push({ courseId: currentCourse.id, completed: true, quizScore: score });
+            const newAchievements = updateUserAchievements(currentUser.uid, allProgress);
+            
+            if (newAchievements.length > 0) {
+                setTimeout(() => location.reload(), 2000);
+            }
+            
+            // Показываем результаты
+            document.getElementById('resultsSection').classList.remove('hidden');
+            document.getElementById('quizScore').textContent = score;
+            document.getElementById('correctAnswersCount').textContent = correctCount;
+            quizSubmitted = true;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof auth !== 'undefined') {
+                auth.onAuthStateChanged((user) => {
+                    currentUser = user;
+                    if (currentUser) {
+                        loadCourseDetail();
+                    } else {
+                        window.location.href = 'courses.html';
+                    }
+                    updateAuthUI();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

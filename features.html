@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI - Возможности</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background-color: #121212; }
+    </style>
+</head>
+<body class="bg-dark">
+    <nav class="fixed top-0 w-full bg-card border-b border-default z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition">
+                    <div class="w-10 h-10 bg-elevated rounded-lg flex items-center justify-center border border-accent-primary">
+                        <span class="text-accent-primary font-bold text-xl">K</span>
+                    </div>
+                    <span class="text-2xl font-bold text-white">Knowlly</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-300 hover:text-accent-primary transition">Главная</a>
+                    <a href="courses.html" class="text-gray-300 hover:text-accent-primary transition">Курсы</a>
+                    <a href="features.html" class="text-accent-primary font-medium">Возможности</a>
+                    <a href="about.html" class="text-gray-300 hover:text-accent-primary transition">О нас</a>
+                </div>
+                <div class="flex items-center space-x-4" id="authButtons"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-16 min-h-screen">
+        <section class="py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h1 class="text-5xl font-bold mb-4 text-white">Возможности <span class="text-accent-primary">Knowlly</span></h1>
+                    <p class="text-xl text-gray-400">Инновационные технологии для эффективного обучения</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="card-hover bg-card p-8 rounded-2xl border border-default">
+                        <div class="w-16 h-16 bg-elevated rounded-xl flex items-center justify-center mb-6 border border-accent-primary">
+                            <i class="fas fa-chart-line text-accent-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-white">Адаптивное обучение</h3>
+                        <p class="text-gray-400">Система анализирует ваш прогресс и автоматически подбирает оптимальный темп обучения</p>
+                        <ul class="mt-4 space-y-2">
+                            <li class="flex items-center space-x-2"><i class="fas fa-check-circle text-accent-secondary"></i><span class="text-gray-300">Персонализированный подход</span></li>
+                            <li class="flex items-center space-x-2"><i class="fas fa-check-circle text-accent-secondary"></i><span class="text-gray-300">Анализ прогресса</span></li>
+                            <li class="flex items-center space-x-2"><i class="fas fa-check-circle text-accent-secondary"></i><span class="text-gray-300">Динамическая сложность</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-hover bg-card p-8 rounded-2xl border border-default">
+                        <div class="w-16 h-16 bg-elevated rounded-xl flex items-center justify-center mb-6 border border-accent-secondary">
+                            <i class="fas fa-chart-simple text-accent-secondary text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-white">Аналитика прогресса</h3>
+                        <p class="text-gray-400">Детальная статистика и визуализация вашего прогресса в реальном времени</p>
+                        <ul class="mt-4 space-y-2">
+                            <li class="flex items-center space-x-2"><i class="fas fa-check-circle text-accent-secondary"></i><span class="text-gray-300">Графики успеваемости</span></li>
+                            <li class="flex items-center space-x-2"><i class="fas fa-check-circle text-accent-secondary"></i><span class="text-gray-300">Персональные рекомендации</span></li>
+                            <li class="flex items-center space-x-2"><i class="fas fa-check-circle text-accent-secondary"></i><span class="text-gray-300">Прогноз результатов</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-hover bg-card p-8 rounded-2xl border border-default">
+                        <div class="w-16 h-16 bg-elevated rounded-xl flex items-center justify-center mb-6 border border-accent-primary">
+                            <i class="fas fa-award text-accent-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-white">Геймификация</h3>
+                        <p class="text-gray-400">Достижения, рейтинги и награды делают процесс обучения увлекательным</p>
+                        <ul class="mt-4 space-y-2">
+                            <li class="flex items-center space-x-2"><i class="fas fa-check-circle text-accent-secondary"></i><span class="text-gray-300">Бейджи и награды</span></li>
+                            <li class="flex items-center space-x-2"><i class="fas fa-check-circle text-accent-secondary"></i><span class="text-gray-300">Рейтинги студентов</span></li>
+                            <li class="flex items-center space-x-2"><i class="fas fa-check-circle text-accent-secondary"></i><span class="text-gray-300">Серии успехов</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-20">
+                    <h2 class="text-3xl font-bold text-center mb-12 text-white">Дополнительные возможности</h2>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="flex items-start space-x-4 p-6 bg-card rounded-xl border border-default">
+                            <div class="w-12 h-12 bg-elevated rounded-lg flex items-center justify-center flex-shrink-0"><i class="fas fa-clock text-accent-primary text-xl"></i></div>
+                            <div><h3 class="text-xl font-bold mb-2 text-white">Гибкий график</h3><p class="text-gray-400">Занимайтесь в удобное время, в любом месте с любого устройства</p></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card rounded-2xl max-w-md w-full p-8 fade-in border border-default">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Вход в систему</h2>
+                <button onclick="closeModal('loginModal')" class="text-gray-400 hover:text-gray-300"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                    <input type="email" id="loginEmail" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Пароль</label>
+                    <input type="password" id="loginPassword" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <button type="submit" class="w-full py-3 btn-primary rounded-lg font-medium transition">Войти</button>
+            </form>
+            <p class="text-center mt-4 text-sm text-gray-400">Нет аккаунта? <a href="#" onclick="switchToRegister()" class="text-accent-primary font-medium">Зарегистрироваться</a></p>
+        </div>
+    </div>
+
+    <div id="registerModal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card rounded-2xl max-w-md w-full p-8 fade-in border border-default">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Регистрация</h2>
+                <button onclick="closeModal('registerModal')" class="text-gray-400 hover:text-gray-300"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form onsubmit="handleRegister(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Имя</label>
+                    <input type="text" id="registerName" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                    <input type="email" id="registerEmail" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Пароль</label>
+                    <input type="password" id="registerPassword" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <button type="submit" class="w-full py-3 btn-primary rounded-lg font-medium transition">Зарегистрироваться</button>
+            </form>
+            <p class="text-center mt-4 text-sm text-gray-400">Уже есть аккаунт? <a href="#" onclick="switchToLogin()" class="text-accent-primary font-medium">Войти</a></p>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

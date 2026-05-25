@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI - Панель управления</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background-color: #121212; }
+        .level-progress { background: linear-gradient(90deg, #BB86FC, #03DAC6); }
+    </style>
+</head>
+<body class="bg-dark">
+    <nav class="fixed top-0 w-full bg-card border-b border-default z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition">
+                    <div class="w-10 h-10 bg-elevated rounded-lg flex items-center justify-center border border-accent-primary">
+                        <i class="fas fa-book-open text-accent-primary text-lg"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-white">EduAI</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-300 hover:text-accent-primary transition">Главная</a>
+                    <a href="courses.html" class="text-gray-300 hover:text-accent-primary transition">Курсы</a>
+                    <a href="features.html" class="text-gray-300 hover:text-accent-primary transition">Возможности</a>
+                    <a href="about.html" class="text-gray-300 hover:text-accent-primary transition">О нас</a>
+                </div>
+                <div class="flex items-center space-x-4" id="authButtons"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-16 min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <div class="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-2 text-white">Добро пожаловать, <span id="dashboardUserName" class="text-accent-primary"></span>!</h1>
+                        <p class="text-gray-400">Продолжайте своё обучение</p>
+                    </div>
+                    <!-- Блок уровня в профиле -->
+                    <div id="profileLevelCard" class="bg-card rounded-xl p-4 border border-default min-w-[200px] hidden">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 bg-accent-primary/20 rounded-full flex items-center justify-center">
+                                <i class="fas fa-crown text-accent-primary text-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-400">Ваш уровень</p>
+                                <p class="text-xl font-bold text-white" id="profileUserLevel">1</p>
+                                <div class="w-full bg-gray-700 rounded-full h-1.5 mt-1">
+                                    <div id="profileLevelProgress" class="level-progress h-1.5 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-card p-6 rounded-xl border border-default card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-elevated rounded-lg flex items-center justify-center"><i class="fas fa-book text-accent-primary text-xl"></i></div>
+                        <span class="text-2xl font-bold text-white" id="completedCourses">0</span>
+                    </div>
+                    <p class="text-gray-400">Пройдено курсов</p>
+                </div>
+                <div class="bg-card p-6 rounded-xl border border-default card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-elevated rounded-lg flex items-center justify-center"><i class="fas fa-check-circle text-accent-secondary text-xl"></i></div>
+                        <span class="text-2xl font-bold text-white" id="correctAnswers">0</span>
+                    </div>
+                    <p class="text-gray-400">Правильных ответов</p>
+                </div>
+                <div class="bg-card p-6 rounded-xl border border-default card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-elevated rounded-lg flex items-center justify-center"><i class="fas fa-fire text-accent-primary text-xl"></i></div>
+                        <span class="text-2xl font-bold text-white" id="currentStreak">0</span>
+                    </div>
+                    <p class="text-gray-400">Дней подряд</p>
+                </div>
+                <div class="bg-card p-6 rounded-xl border border-default card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-elevated rounded-lg flex items-center justify-center"><i class="fas fa-star text-accent-secondary text-xl"></i></div>
+                        <span class="text-2xl font-bold text-white" id="totalXP">0</span>
+                    </div>
+                    <p class="text-gray-400">Всего XP</p>
+                </div>
+            </div>
+
+            <div id="achievementsDashboard" class="bg-card rounded-xl border border-default p-6 mb-8 hidden">
+                <h3 class="text-lg font-bold text-white mb-3"><i class="fas fa-medal text-accent-primary mr-2"></i>Ваши достижения</h3>
+                <div id="achievementsListDashboard" class="flex flex-wrap gap-3"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-card p-6 rounded-xl border border-default">
+                    <h3 class="text-xl font-bold mb-4 text-white">Прогресс обучения</h3>
+                    <canvas id="progressChart"></canvas>
+                </div>
+                <div class="bg-card p-6 rounded-xl border border-default">
+                    <h3 class="text-xl font-bold mb-4 text-white">Последняя активность</h3>
+                    <div id="recentActivity" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <div class="bg-card p-6 rounded-xl border border-default">
+                <h3 class="text-xl font-bold mb-4 text-white">Доступные курсы</h3>
+                <div id="availableTests" class="grid md:grid-cols-2 gap-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="script.js"></script>
+    <script>
+        async function loadDashboardData() {
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.getElementById('dashboardUserName').textContent = currentUser.displayName || currentUser.email;
+            
+            const completedCoursesList = [];
+            let totalCorrectAnswers = 0;
+            let totalPointsSum = 0;
+            
+            for (const course of coursesData) {
+                const progress = getCourseProgress(currentUser.uid, course.id);
+                if (progress.completed) {
+                    completedCoursesList.push(progress);
+                    const correctInCourse = Math.round((progress.quizScore / 100) * (course.quiz?.length || 5));
+                    totalCorrectAnswers += correctInCourse;
+                    totalPointsSum += progress.quizScore;
+                }
+            }
+            
+            const totalCompleted = completedCoursesList.length;
+            const totalXP = totalCompleted * 100;
+            
+            document.getElementById('completedCourses').textContent = totalCompleted;
+            document.getElementById('correctAnswers').textContent = totalCorrectAnswers;
+            document.getElementById('totalXP').textContent = totalXP;
+            document.getElementById('currentStreak').textContent = calculateStreak(completedCoursesList);
+            
+            // Уровень в профиле
+            const level = Math.floor(totalCompleted / 3) + 1;
+            const levelProgressPercent = ((totalCompleted % 3) / 3) * 100;
+            document.getElementById('profileUserLevel').textContent = level;
+            document.getElementById('profileLevelProgress').style.width = `${levelProgressPercent}%`;
+            
+            if (totalCompleted > 0) {
+                document.getElementById('profileLevelCard').classList.remove('hidden');
+            }
+            
+            const userAchievements = getUserAchievements(currentUser.uid);
+            if (userAchievements.length > 0) {
+                document.getElementById('achievementsDashboard').classList.remove('hidden');
+                const earnedAchs = achievementsList.filter(a => userAchievements.includes(a.id));
+                document.getElementById('achievementsListDashboard').innerHTML = earnedAchs.map(ach => `
+                    <div class="flex items-center gap-2 px-3 py-2 bg-elevated rounded-lg border border-accent-primary/30">
+                        <i class="fas ${ach.icon} text-accent-primary"></i>
+                        <span class="text-sm text-white">${ach.name}</span>
+                    </div>
+                `).join('');
+            }
+            
+            loadProgressChart(completedCoursesList);
+            loadRecentActivity(completedCoursesList);
+            loadAvailableCourses();
+        }
+        
+        window.loadDashboardData = loadDashboardData;
+    </script>
+</body>
+</html>

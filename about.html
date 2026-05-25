@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI - О нас</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background-color: #121212; }
+    </style>
+</head>
+<body class="bg-dark">
+    <nav class="fixed top-0 w-full bg-card border-b border-default z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex items-center space-x-2 hover:opacity-80 transition">
+    <div class="w-10 h-10 bg-elevated rounded-lg flex items-center justify-center border border-accent-primary">
+        <i class="fas fa-book-open text-accent-primary text-lg"></i>
+    </div>
+    <span class="text-2xl font-bold text-white">EduAI</span>
+</a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-300 hover:text-accent-primary transition">Главная</a>
+                    <a href="courses.html" class="text-gray-300 hover:text-accent-primary transition">Курсы</a>
+                    <a href="features.html" class="text-gray-300 hover:text-accent-primary transition">Возможности</a>
+                    <a href="about.html" class="text-accent-primary font-medium">О нас</a>
+                </div>
+                <div class="flex items-center space-x-4" id="authButtons"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-16 min-h-screen">
+        <section class="py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h1 class="text-5xl font-bold mb-4 text-white">О платформе <span class="text-accent-primary">EduAI</span></h1>
+                    <p class="text-xl text-gray-400">Революция в образовании с помощью адаптивных технологий</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-12 items-center mb-20">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-6 text-white">Наша миссия</h2>
+                        <p class="text-gray-400 mb-6">EduAI — это инновационная образовательная платформа, использующая передовые технологии адаптивного обучения для создания персонализированного опыта обучения.</p>
+                        <p class="text-gray-400 mb-6">Наша платформа анализирует ваш прогресс, определяет пробелы в знаниях и автоматически корректирует сложность материала.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3"><i class="fas fa-check-circle text-accent-secondary text-xl"></i><span class="text-gray-300">Персонализированный подход к каждому студенту</span></div>
+                            <div class="flex items-center space-x-3"><i class="fas fa-check-circle text-accent-secondary text-xl"></i><span class="text-gray-300">Алгоритмы анализа прогресса</span></div>
+                            <div class="flex items-center space-x-3"><i class="fas fa-check-circle text-accent-secondary text-xl"></i><span class="text-gray-300">Мгновенная обратная связь</span></div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="bg-card rounded-2xl p-12 border border-default text-center">
+                            <div class="w-32 h-32 mx-auto mb-6 bg-elevated rounded-full flex items-center justify-center">
+                                <i class="fas fa-graduation-cap text-accent-primary text-5xl"></i>
+                            </div>
+                            <p class="text-gray-400 italic">"Знание — сила, а EduAI — ваш путь к знаниям"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="p-8 bg-card rounded-2xl border border-default"><div class="text-5xl font-bold text-accent-primary mb-2">2026</div><div class="text-gray-400">Год основания</div></div>
+                    <div class="p-8 bg-card rounded-2xl border border-default"><div class="text-5xl font-bold text-accent-primary mb-2">98%</div><div class="text-gray-400">Довольных пользователей</div></div>
+                    <div class="p-8 bg-card rounded-2xl border border-default"><div class="text-5xl font-bold text-accent-primary mb-2">11+</div><div class="text-gray-400">Курсов</div></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card rounded-2xl max-w-md w-full p-8 fade-in border border-default">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Вход в систему</h2>
+                <button onclick="closeModal('loginModal')" class="text-gray-400 hover:text-gray-300"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                    <input type="email" id="loginEmail" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Пароль</label>
+                    <input type="password" id="loginPassword" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <button type="submit" class="w-full py-3 btn-primary rounded-lg font-medium transition">Войти</button>
+            </form>
+            <p class="text-center mt-4 text-sm text-gray-400">Нет аккаунта? <a href="#" onclick="switchToRegister()" class="text-accent-primary font-medium">Зарегистрироваться</a></p>
+        </div>
+    </div>
+
+    <div id="registerModal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card rounded-2xl max-w-md w-full p-8 fade-in border border-default">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Регистрация</h2>
+                <button onclick="closeModal('registerModal')" class="text-gray-400 hover:text-gray-300"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form onsubmit="handleRegister(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Имя</label>
+                    <input type="text" id="registerName" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                    <input type="email" id="registerEmail" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Пароль</label>
+                    <input type="password" id="registerPassword" required class="w-full px-4 py-3 bg-elevated border border-default rounded-lg focus:border-accent-primary focus:outline-none text-white">
+                </div>
+                <button type="submit" class="w-full py-3 btn-primary rounded-lg font-medium transition">Зарегистрироваться</button>
+            </form>
+            <p class="text-center mt-4 text-sm text-gray-400">Уже есть аккаунт? <a href="#" onclick="switchToLogin()" class="text-accent-primary font-medium">Войти</a></p>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

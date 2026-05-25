@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #121212;
+    color: #E0E0E0;
+}
+
+/* Тёмная тема */
+.bg-dark {
+    background-color: #121212;
+}
+
+.bg-card {
+    background-color: #1E1E1E;
+}
+
+.bg-elevated {
+    background-color: #2D2D2D;
+}
+
+.accent-primary {
+    color: #BB86FC;
+}
+
+.accent-secondary {
+    color: #03DAC6;
+}
+
+.border-default {
+    border-color: #333333;
+}
+
+/* Кнопки */
+.btn-primary {
+    background-color: transparent;
+    border: 1px solid #BB86FC;
+    color: #BB86FC;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: rgba(187, 134, 252, 0.1);
+    box-shadow: 0 0 15px rgba(187, 134, 252, 0.2);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid #03DAC6;
+    color: #03DAC6;
+}
+
+.btn-secondary:hover {
+    background-color: rgba(3, 218, 198, 0.1);
+}
+
+.btn-dark {
+    background-color: #1E1E1E;
+    border: 1px solid #333333;
+    color: #E0E0E0;
+}
+
+.btn-dark:hover {
+    border-color: #BB86FC;
+    color: #BB86FC;
+}
+
+/* Карточки */
+.card-hover {
+    transition: all 0.3s ease;
+    background-color: #1E1E1E;
+    border: 1px solid #333333;
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    border-color: #BB86FC;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* Анимации */
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Скроллбар */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1E1E1E;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #BB86FC;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #03DAC6;
+}
+
+/* Прогресс-бар */
+.progress-bar {
+    background-color: #333333;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    background: linear-gradient(90deg, #BB86FC, #03DAC6);
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+/* Таблицы в тёмной теме */
+table {
+    color: #E0E0E0;
+}
+
+th {
+    background-color: #2D2D2D;
+    color: #BB86FC;
+}
+
+tr {
+    border-bottom-color: #333333;
+}
+
+tr:hover {
+    background-color: #2D2D2D;
+}
